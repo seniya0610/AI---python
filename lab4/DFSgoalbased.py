@@ -1,4 +1,4 @@
-#BFS Goal Based Agent
+#DFS Goal Based Agent
 
 alphabetTree = {
     'A': ['B', 'C'],
