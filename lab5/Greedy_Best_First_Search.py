@@ -1,41 +1,61 @@
-graph = {
-    'A': [['B', 4], ['C', 3]],
-    'B': [['E', 12], ['F', 5]],
-    'C': [['D', 7], ['E', 10]],
-    'D': [['E', 2]],
-    'E': [['G', 5]],
-    'F': [['G', 16]],
-    'G': []
-}
+import heapq
 
-heuristic = {
-    'A': 14, 'B': 12, 'C': 11,
-    'D': 6,  'E': 4,  'F': 11, 'G': 0
-}
+class Environment:
+    def __init__(self):
+        self.graph = {
+            'A': [['B', 4], ['C', 3]],
+            'B': [['E', 12], ['F', 5]],
+            'C': [['D', 7], ['E', 10]],
+            'D': [['E', 2]],
+            'E': [['G', 5]],
+            'F': [['G', 16]],
+            'G': []
+        }
+        self.heuristic = {
+            'A': 14, 'B': 12, 'C': 11,
+            'D': 6,  'E': 4,  'F': 11, 'G': 0
+        }
 
-def greedy_best_first(start, goal):
-    open_list = [(heuristic[start], start, [start])]
-    visited = []
+    def get_neighbors(self, node):
+        return self.graph[node]
 
-    while len(open_list) > 0:
-        open_list.sort()
-        h, node, path = open_list.pop(0)
+    def get_heuristic(self, node):
+        return self.heuristic[node]
 
-        if node in visited:
-            continue
+class GreedyAgent:
+    def __init__(self, environment):
+        self.env = environment
 
-        visited.append(node)
-        print("Visiting:", node)
+    def search(self, start, goal):
+        open_list = [(self.env.get_heuristic(start), start, [start])]
+        visited = []
 
-        if node == goal:
-            print("Path:", path)
-            return
+        while open_list:
+            open_list.sort()
+            h, node, path = open_list.pop(0)
 
-        for pair in graph[node]:
-            neighbor = pair[0]
-            if neighbor not in visited:
-                open_list.append((heuristic[neighbor], neighbor, path + [neighbor]))
+            if node in visited:
+                continue
+            visited.append(node)
+            print(f"Visiting: {node}")
 
-    print("No path found")
+            if node == goal:
+                print(f"Path: {' -> '.join(path)}")
+                return path
 
-greedy_best_first('A', 'G')
+            for neighbor, _ in self.env.get_neighbors(node):
+                if neighbor not in visited:
+                    open_list.append((self.env.get_heuristic(neighbor), neighbor, path + [neighbor]))
+
+        print("No path found")
+        return None
+
+
+# --- Run ---
+def run_agent(start, goal):
+    env = Environment()
+    agent = GreedyAgent(env)
+    agent.search(start, goal)
+
+
+run_agent('A', 'G')
