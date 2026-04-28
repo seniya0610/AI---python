@@ -13,50 +13,50 @@ class Environment:
             'C1': 'T1', 'C2': 'T2', 'C3': 'T3', 'C4': 'T4', 'C5': 'T5'
         }
 
-def calculate_fitness(self, timetable):
-    penalty = 0
-
-    # --------------------------------------------------
-    # CONSTRAINT 1: teacher can't teach two classes at the same time
-    # --------------------------------------------------
-    for day in self.days:
-        for slot in self.slots:
-            teachers_this_slot = []
-            for course in self.courses:
-                if timetable[day][slot] == course:
-                    teacher = self.teacher_course[course]
-                    if teacher in teachers_this_slot:
-                        penalty += 10  # same teacher, same slot = clash
-                    teachers_this_slot.append(teacher)
-
-    # --------------------------------------------------
-    # CONSTRAINT 2: each course must appear exactly 3 times a week
-    # --------------------------------------------------
-    for course in self.courses:
-        count = 0
+    def calculate_fitness(self, timetable):
+        penalty = 0
+    
+        # --------------------------------------------------
+        # CONSTRAINT 1: teacher can't teach two classes at the same time
+        # --------------------------------------------------
         for day in self.days:
             for slot in self.slots:
-                if timetable[day][slot] == course:
-                    count += 1
-        # e.g count=5 -> penalty 20, count=1 -> penalty 20
-        penalty += abs(count - 3) * 10
-
-    # --------------------------------------------------
-    # CONSTRAINT 3: no teacher teaches more than 3 consecutive slots
-    # --------------------------------------------------
-    for day in self.days:
-        for teacher in self.teachers:
-            consecutive = 0
-            for slot in self.slots:
-                cell = timetable[day][slot]
-                if cell and self.teacher_course[cell] == teacher:
-                    consecutive += 1
-                    if consecutive > 3:
-                        penalty += 5  # 4th class in a row = bad
-                else:
-                    consecutive = 0  # reset streak when teacher has a gap
-
-    return penalty  # 0 = perfect timetable, higher = more violations
+                teachers_this_slot = []
+                for course in self.courses:
+                    if timetable[day][slot] == course:
+                        teacher = self.teacher_course[course]
+                        if teacher in teachers_this_slot:
+                            penalty += 10  # same teacher, same slot = clash
+                        teachers_this_slot.append(teacher)
+    
+        # --------------------------------------------------
+        # CONSTRAINT 2: each course must appear exactly 3 times a week
+        # --------------------------------------------------
+        for course in self.courses:
+            count = 0
+            for day in self.days:
+                for slot in self.slots:
+                    if timetable[day][slot] == course:
+                        count += 1
+            # e.g count=5 -> penalty 20, count=1 -> penalty 20
+            penalty += abs(count - 3) * 10
+    
+        # --------------------------------------------------
+        # CONSTRAINT 3: no teacher teaches more than 3 consecutive slots
+        # --------------------------------------------------
+        for day in self.days:
+            for teacher in self.teachers:
+                consecutive = 0
+                for slot in self.slots:
+                    cell = timetable[day][slot]
+                    if cell and self.teacher_course[cell] == teacher:
+                        consecutive += 1
+                        if consecutive > 3:
+                            penalty += 5  # 4th class in a row = bad
+                    else:
+                        consecutive = 0  # reset streak when teacher has a gap
+    
+        return penalty  # 0 = perfect timetable, higher = more violations
 
 
 # --- Agent ---
