@@ -141,20 +141,5 @@ def run_agent():
 
     best_timetable = agent.evolve()
 
-    print("\n--- Best Timetable ---")
-    print(f"{'':6}", end="")
-    for slot in env.slots:
-        print(f"  Slot{slot}", end="")
-    print()
-    for day in env.days:
-        print(f"{day:<6}", end="")
-        for slot in env.slots:
-            cell = best_timetable[day][slot] or '----'
-            print(f"  {cell:<5}", end="")
-        print()
-
-    print(f"\nFinal Penalty Score: {env.calculate_fitness(best_timetable)}")
-    print("(0 = perfect, higher = more constraint violations)")
-
 
 run_agent()
