@@ -33,7 +33,6 @@ class BeamSearchAgent:
         visited = []
 
         while beam:
-            print(f"Beam: {[node for _, node, _, _ in beam]}")
 
             # check if goal is in current beam
             for h, node, path, g in beam:
