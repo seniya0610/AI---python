@@ -13,7 +13,11 @@ def print_board():
     print()
 
 def get_legal_moves():
-    return [i for i, v in enumerate(board) if v is None]
+    legal = []
+    for i, v in enumerate(board):
+        if v is None:
+            legal.append(i)
+    return legal
 
 def check_winner():
     lines = [
